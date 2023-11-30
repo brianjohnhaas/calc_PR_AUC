@@ -65,6 +65,8 @@ def main():
 
     group_pr_aucs_df.sort_values(by='pr_auc', ascending=False, inplace=True)
     group_pr_aucs_df.to_csv(sys.stdout, sep="\t", index=False)
+
+    make_PR_plot(pr_curve_dfs)
     
     
     sys.exit(0)
@@ -202,7 +204,30 @@ def interpolate_PR(start_entry, end_entry, num_truth, pr_values):
     return auc
 
             
-        
+
+
+def make_PR_plot(df):
+
+    import matplotlib.pyplot as plt
+    
+    df_grps = df.groupby('group', as_index=False)
+
+    #pdf1 = matplotlib.backends.backend_pdf.PdfPages(os.path.sep.join([output_dir, "Precision_recall_depth.pdf"]))
+    #fig1 = plt.figure(1)
+    
+    for name, df_grp in df_grps:
+        print(df_grp)
+        precision = df_grp['precision']
+        recall = df_grp['recall']
+        plt.plot(recall, precision, label=name, marker='.')
+
+    plt.xlabel('recall')
+    plt.ylabel('precision')
+    plt.legend()
+    plt.savefig('pr_plot.png')
+
+    return
+
 
     
 if __name__ == "__main__":
