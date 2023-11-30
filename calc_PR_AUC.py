@@ -6,7 +6,8 @@ import argparse
 import csv
 from collections import defaultdict
 import pandas as pd
-
+import matplotlib.pyplot as plt
+    
 logging.basicConfig(level=logging.INFO, 
                     format='%(asctime)s : %(levelname)s : %(message)s',
                     datefmt='%H:%M:%S')
@@ -67,7 +68,7 @@ def main():
     group_pr_aucs_df.to_csv(sys.stdout, sep="\t", index=False)
 
     make_PR_plot(pr_curve_dfs)
-    
+    make_PR_auc_barplot(group_pr_aucs_df)
     
     sys.exit(0)
 
@@ -208,12 +209,9 @@ def interpolate_PR(start_entry, end_entry, num_truth, pr_values):
 
 def make_PR_plot(df):
 
-    import matplotlib.pyplot as plt
-    
     df_grps = df.groupby('group', as_index=False)
 
-    #pdf1 = matplotlib.backends.backend_pdf.PdfPages(os.path.sep.join([output_dir, "Precision_recall_depth.pdf"]))
-    #fig1 = plt.figure(1)
+    plt.figure()
     
     for name, df_grp in df_grps:
         print(df_grp)
@@ -227,6 +225,16 @@ def make_PR_plot(df):
     plt.savefig('pr_plot.png')
 
     return
+
+
+def make_PR_auc_barplot(df):
+
+    plt.figure()
+    plt.bar(df['group'], df['pr_auc'])
+    plt.savefig('pr_auc_barplot.png')
+
+    return
+
 
 
     
