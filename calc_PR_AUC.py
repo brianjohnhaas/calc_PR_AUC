@@ -63,6 +63,7 @@ def main():
     
     pr_curve_dfs.to_csv(out_PR_file, sep="\t", index=False)
 
+    group_pr_aucs_df.sort_values(by='pr_auc', ascending=False, inplace=True)
     group_pr_aucs_df.to_csv(sys.stdout, sep="\t", index=False)
     
     
